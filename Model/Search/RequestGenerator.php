@@ -186,7 +186,6 @@ class RequestGenerator
                                 [
                                     'field' => $attribute->getAttributeCode(),
                                     'boost' => $attribute->getSearchWeight() ?: 1,
-                                    'matchCondition' => 'match_phrase_prefix',
                                 ],
                             ],
                         ];
