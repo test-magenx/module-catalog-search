@@ -65,31 +65,18 @@ class Category extends AbstractFilter
     public function apply(\Magento\Framework\App\RequestInterface $request)
     {
         $categoryId = $request->getParam($this->_requestVar) ?: $request->getParam('id');
-        if (!empty($categoryId)) {
-            $this->dataProvider->setCategoryId($categoryId);
-
-            $category = $this->dataProvider->getCategory();
-
-            $this->getLayer()->getProductCollection()->addCategoryFilter($category);
-
-            if ($request->getParam('id') != $category->getId() && $this->dataProvider->isValid()) {
-                $this->getLayer()->getState()->addFilter($this->_createItem($category->getName(), $categoryId));
-            }
+        if (empty($categoryId)) {
+            return $this;
         }
 
+        $this->dataProvider->setCategoryId($categoryId);
+
         $category = $this->dataProvider->getCategory();
-        if ($category) {
-            $childrenCategoryIds = [];
-            foreach ($category->getChildrenCategories() as $category) {
-                $childrenCategoryIds[] = $category->getId();
-            }
-            if ($childrenCategoryIds) {
-                $this->getLayer()->getProductCollection()
-                    ->addFieldToFilter(
-                        'category_ids_to_aggregate',
-                        $childrenCategoryIds
-                    );
-            }
+
+        $this->getLayer()->getProductCollection()->addCategoryFilter($category);
+
+        if ($request->getParam('id') != $category->getId() && $this->dataProvider->isValid()) {
+            $this->getLayer()->getState()->addFilter($this->_createItem($category->getName(), $categoryId));
         }
         return $this;
     }

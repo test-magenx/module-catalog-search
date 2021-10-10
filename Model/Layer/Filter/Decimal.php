@@ -112,7 +112,6 @@ class Decimal extends AbstractFilter
         $facets = $productCollection->getFacetedData($attribute->getAttributeCode());
 
         $data = [];
-        $lastFacet = array_key_last($facets);
         foreach ($facets as $key => $aggregation) {
             $count = $aggregation['count'];
             if (!$this->isOptionReducesResults($count, $productSize)) {
@@ -125,7 +124,7 @@ class Decimal extends AbstractFilter
             if ($to == '*') {
                 $to = null;
             }
-            $label = $this->renderRangeLabel(empty($from) ? 0 : $from, $lastFacet === $key ? null : $to);
+            $label = $this->renderRangeLabel(empty($from) ? 0 : $from, $to);
             $value = $from . '-' . $to;
 
             $data[] = [
